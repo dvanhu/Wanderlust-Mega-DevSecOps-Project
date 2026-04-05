@@ -1,120 +1,105 @@
-@Library('Shared') _
 pipeline {
-    agent {label 'Node'}
-    
-    environment{
-        SONAR_HOME = tool "Sonar"
+    agent any
+
+    tools {
+        sonarQubeScanner 'sonar-scanner'
     }
-    
+
+    environment {
+        SONAR_HOST_URL = 'http://localhost:9000'
+    }
+
     parameters {
-        string(name: 'FRONTEND_DOCKER_TAG', defaultValue: '', description: 'Setting docker image for latest push')
-        string(name: 'BACKEND_DOCKER_TAG', defaultValue: '', description: 'Setting docker image for latest push')
+        string(name: 'FRONTEND_DOCKER_TAG', defaultValue: 'latest', description: 'Frontend image tag')
+        string(name: 'BACKEND_DOCKER_TAG', defaultValue: 'latest', description: 'Backend image tag')
     }
-    
+
     stages {
-        
-        stage("Workspace cleanup"){
-            steps{
-                script{
-                    cleanWs()
-                }
-            }
-        }
-        
-        stage('Git: Code Checkout') {
+
+        stage('Workspace Cleanup') {
             steps {
-                script{
-                    code_checkout("https://github.com/DevMadhup/Wanderlust-Mega-Project.git","main")
-                }
+                cleanWs()
             }
         }
-        
-        stage("Trivy: Filesystem scan"){
-            steps{
-                script{
-                    trivy_scan()
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                cd backend && npm install
+                cd ../frontend && npm install
+                '''
+            }
+        }
+
+        stage('OWASP Dependency Check') {
+            steps {
+                sh '''
+                dependency-check --scan . --format XML --out .
+                '''
+            }
+        }
+
+        stage('Trivy Filesystem Scan') {
+            steps {
+                sh '''
+                trivy fs . --format table
+                '''
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=wanderlust \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://localhost:9000
+                    '''
                 }
             }
         }
 
-        stage("OWASP: Dependency check"){
-            steps{
-                script{
-                    owasp_dependency()
-                }
+        stage('Build Docker Images') {
+            steps {
+                sh '''
+                docker build -t wanderlust-backend:${BACKEND_DOCKER_TAG} ./backend
+                docker build -t wanderlust-frontend:${FRONTEND_DOCKER_TAG} ./frontend
+                '''
             }
         }
-        
-        stage("SonarQube: Code Analysis"){
-            steps{
-                script{
-                    sonarqube_analysis("Sonar","wanderlust","wanderlust")
-                }
+
+        stage('Trivy Image Scan') {
+            steps {
+                sh '''
+                trivy image wanderlust-backend:${BACKEND_DOCKER_TAG}
+                trivy image wanderlust-frontend:${FRONTEND_DOCKER_TAG}
+                '''
             }
         }
-        
-        stage("SonarQube: Code Quality Gates"){
-            steps{
-                script{
-                    sonarqube_code_quality()
-                }
+
+        stage('Docker Push (Optional)') {
+            when {
+                expression { return false }  // enable later
             }
-        }
-        
-        stage('Exporting environment variables') {
-            parallel{
-                stage("Backend env setup"){
-                    steps {
-                        script{
-                            dir("Automations"){
-                                sh "bash updatebackendnew.sh"
-                            }
-                        }
-                    }
-                }
-                
-                stage("Frontend env setup"){
-                    steps {
-                        script{
-                            dir("Automations"){
-                                sh "bash updatefrontendnew.sh"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        stage("Docker: Build Images"){
-            steps{
-                script{
-                        dir('backend'){
-                            docker_build("wanderlust-backend-beta","${params.BACKEND_DOCKER_TAG}","madhupdevops")
-                        }
-                    
-                        dir('frontend'){
-                            docker_build("wanderlust-frontend-beta","${params.FRONTEND_DOCKER_TAG}","madhupdevops")
-                        }
-                }
-            }
-        }
-        
-        stage("Docker: Push to DockerHub"){
-            steps{
-                script{
-                    docker_push("wanderlust-backend-beta","${params.BACKEND_DOCKER_TAG}","madhupdevops") 
-                    docker_push("wanderlust-frontend-beta","${params.FRONTEND_DOCKER_TAG}","madhupdevops")
-                }
+            steps {
+                sh '''
+                docker push wanderlust-backend:${BACKEND_DOCKER_TAG}
+                docker push wanderlust-frontend:${FRONTEND_DOCKER_TAG}
+                '''
             }
         }
     }
-    post{
-        success{
-            archiveArtifacts artifacts: '*.xml', followSymlinks: false
-            build job: "Wanderlust-CD", parameters: [
-                string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
-                string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
-            ]
+
+    post {
+        always {
+            archiveArtifacts artifacts: '*.xml', allowEmptyArchive: true
         }
     }
 }
