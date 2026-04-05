@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
+        NODE_OPTIONS = '--dns-result-order=ipv4first'
+        NPM_CONFIG_REGISTRY = 'https://registry.npmjs.org/'
     }
 
     parameters {
@@ -26,10 +28,22 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                cd backend && npm install
-                cd ../frontend && npm install
-                '''
+                retry(2) {
+                    sh '''
+                    echo "Using IPv4 + npm registry fix"
+
+                    npm config set registry $NPM_CONFIG_REGISTRY
+                    npm config set fetch-retries 5
+                    npm config set fetch-retry-mintimeout 20000
+                    npm config set fetch-retry-maxtimeout 120000
+
+                    cd backend
+                    npm install --no-audit --prefer-offline
+
+                    cd ../frontend
+                    npm install --no-audit --prefer-offline
+                    '''
+                }
             }
         }
 
@@ -56,7 +70,7 @@ pipeline {
                     sonar-scanner \
                     -Dsonar.projectKey=wanderlust \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=http://localhost:9000
+                    -Dsonar.host.url=$SONAR_HOST_URL
                     '''
                 }
             }
@@ -96,6 +110,9 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: '*.xml', allowEmptyArchive: true
+        }
+        failure {
+            echo "Pipeline failed — check network / tool setup"
         }
     }
 }
