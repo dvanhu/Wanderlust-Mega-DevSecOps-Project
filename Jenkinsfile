@@ -30,7 +30,7 @@ pipeline {
             steps {
                 retry(2) {
                     sh '''
-                    echo "Using IPv4 + npm registry fix"
+                    echo "Installing dependencies with stable config..."
 
                     npm config set registry $NPM_CONFIG_REGISTRY
                     npm config set fetch-retries 5
@@ -48,15 +48,18 @@ pipeline {
         }
 
         stage('OWASP Dependency Check') {
-    steps {
-        sh '''
-        /opt/dependency-check/bin/dependency-check.sh \
-        --scan . \
-        --format XML \
-        --out .
-        '''
+            steps {
+                sh '''
+                echo "Running OWASP Dependency Check..."
+
+                /opt/dependency-check/bin/dependency-check.sh \
+                --scan . \
+                --format XML \
+                --out . \
+                --data /opt/dependency-check/data
+                '''
+            }
         }
-      }
 
         stage('Trivy Filesystem Scan') {
             steps {
@@ -114,8 +117,11 @@ pipeline {
         always {
             archiveArtifacts artifacts: '*.xml', allowEmptyArchive: true
         }
+        success {
+            echo "Pipeline completed successfully 🚀"
+        }
         failure {
-            echo "Pipeline failed — check network / tool setup"
+            echo "Pipeline failed — check logs 🔍"
         }
     }
 }
