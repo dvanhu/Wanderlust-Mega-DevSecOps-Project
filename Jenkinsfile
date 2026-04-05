@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-    sonarRunner 'sonar-scanner'
-    }
-
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
     }
@@ -86,7 +82,7 @@ pipeline {
 
         stage('Docker Push (Optional)') {
             when {
-                expression { return false }  // enable later
+                expression { return false }
             }
             steps {
                 sh '''
