@@ -50,7 +50,7 @@ pipeline {
         stage('OWASP Dependency Check') {
             steps {
                 sh '''
-                dependency-check --scan . --format XML --out .
+                dependency-check.sh --scan . --format XML --out .
                 '''
             }
         }
