@@ -48,12 +48,15 @@ pipeline {
         }
 
         stage('OWASP Dependency Check') {
-            steps {
-                sh '''
-                dependency-check.sh --scan . --format XML --out .
-                '''
-            }
+    steps {
+        sh '''
+        /opt/dependency-check/bin/dependency-check.sh \
+        --scan . \
+        --format XML \
+        --out .
+        '''
         }
+      }
 
         stage('Trivy Filesystem Scan') {
             steps {
