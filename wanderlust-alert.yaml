@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: wanderlust-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring   # ✅ THIS IS THE ONLY REQUIRED LABEL
+spec:
+  groups:
+    - name: wanderlust.rules
+      rules:
+        - alert: WanderlustHighCPU
+          expr: sum(rate(container_cpu_usage_seconds_total{namespace="wanderlust"}[2m])) > 0.0001
+          for: 30s
+          labels:
+            severity: critical
+          annotations:
+            summary: "🔥 High CPU in Wanderlust"
+            description: "CPU usage is high in wanderlust namespace"
