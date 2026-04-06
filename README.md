@@ -18,7 +18,7 @@ A production-grade DevSecOps implementation for **WanderLust**, a MERN-stack tra
 
 ## Pipeline Architecture
 
-![DevSecOps GitOps Architecture] ![DevSecOps+GitOps](https://github.com/user-attachments/assets/8db20892-a8ee-41eb-81bc-7647cf4bd9b6)
+DevSecOps GitOps Architecture ![DevSecOps+GitOps](https://github.com/user-attachments/assets/8db20892-a8ee-41eb-81bc-7647cf4bd9b6)
 
 
 The pipeline is divided into two automated jobs:
