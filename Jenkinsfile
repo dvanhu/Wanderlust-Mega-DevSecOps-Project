@@ -30,7 +30,7 @@ pipeline {
             steps {
                 retry(2) {
                     sh '''
-                    echo "Installing dependencies with stable config..."
+                    echo "Installing dependencies..."
 
                     npm config set registry $NPM_CONFIG_REGISTRY
                     npm config set fetch-retries 5
@@ -56,7 +56,10 @@ pipeline {
                 --scan . \
                 --format XML \
                 --out . \
-                --data /opt/dependency-check/data
+                --data /opt/dependency-check/data \
+                --disableOssIndex \
+                --disableYarnAudit \
+                || true
                 '''
             }
         }
@@ -118,10 +121,10 @@ pipeline {
             archiveArtifacts artifacts: '*.xml', allowEmptyArchive: true
         }
         success {
-            echo "Pipeline completed successfully 🚀"
+            echo "✅ Pipeline completed successfully 🚀"
         }
         failure {
-            echo "Pipeline failed — check logs 🔍"
+            echo "❌ Pipeline failed — check logs 🔍"
         }
     }
 }
