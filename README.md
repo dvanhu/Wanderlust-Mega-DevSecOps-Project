@@ -2,7 +2,8 @@
 
 > A production-grade **DevSecOps** implementation for WanderLust, a MERN-stack travel blog application — featuring a fully automated CI/CD pipeline with integrated security scanning, GitOps-driven deployment on Kubernetes (EKS), and real-time observability via Prometheus and Grafana.
 
-![WanderLust App](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/wanderlust-app.png)
+![WanderLust App](<img width="2010" height="1401" alt="277722443-17ba9da6-225f-481d-87c0-5d5a010a9538" src="https://github.com/user-attachments/assets/7633ad46-3bcd-46b6-ab75-e41e183e98f6" />)
+
 
 ---
 
@@ -16,7 +17,7 @@
 
 ## Architecture & Pipeline Flow
 
-![DevSecOps Architecture](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/devsecops-architecture.png)
+![DevSecOps Architecture](![DevSecOps+GitOps](https://github.com/user-attachments/assets/fc204de0-e42b-438f-8567-dca9a4689735))
 
 The end-to-end pipeline is split into two jobs:
 
@@ -55,10 +56,10 @@ The end-to-end pipeline is split into two jobs:
 Both the frontend and backend are containerized and deployed to the EKS cluster.
 
 ### Frontend — WanderLust Travel Blog
-![Frontend](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/frontend-running.png)
+![Frontend](<img width="1920" height="1080" alt="Screenshot from 2026-04-05 12-53-04" src="https://github.com/user-attachments/assets/9b62312c-b0d9-4a52-b56e-df5d83a12807" />)
 
 ### Backend — Health Check
-![Backend](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/backend-health.png)
+![Backend](<img width="581" height="56" alt="image" src="https://github.com/user-attachments/assets/4559effd-0e5e-446b-9842-9a6d75c0365d" />)
 
 ---
 
@@ -84,7 +85,7 @@ A complete DevSecOps pipeline was built on Jenkins with a **master-worker node a
 
 ### Pipeline Run — All Stages Passed
 
-![Jenkins Pipeline](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/jenkins-pipeline.png)
+![Jenkins Pipeline](<img width="1920" height="1080" alt="Screenshot from 2026-04-06 09-29-16" src="https://github.com/user-attachments/assets/7ca904f4-1628-4c12-9d7e-a55e8d0600a7" />)
 
 ---
 
@@ -103,7 +104,7 @@ SonarQube is integrated into the pipeline and enforces a quality gate **before a
 | New Code Smells | 0 |
 | Reliability / Security / Maintainability | **A / A / A** |
 
-![SonarQube](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/sonarqube.png)
+![SonarQube](<img width="1852" height="930" alt="Screenshot from 2026-04-06 09-31-35" src="https://github.com/user-attachments/assets/7e308b8c-db30-4f7b-9cb5-c85b877a181c" />)
 
 ---
 
@@ -123,9 +124,9 @@ ArgoCD watches the Kubernetes manifests repository and **auto-syncs** any change
 
 ### Application Resource Tree
 
-![ArgoCD Services](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/argocd-1.png)
+![ArgoCD Services](<img width="1920" height="1080" alt="Screenshot from 2026-04-06 11-05-03" src="https://github.com/user-attachments/assets/63482197-edcc-4f22-ba01-8bd61fbbe506" />)
 
-![ArgoCD Deployments](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/argocd-2.png)
+![ArgoCD Deployments](<img width="1115" height="419" alt="image" src="https://github.com/user-attachments/assets/e9d71fc1-2375-4968-ba59-80d315a122cb" />)
 
 **Deployed resources include:**
 - `mongo-pv` / `mongo-pvc` — Persistent storage for MongoDB
@@ -140,7 +141,7 @@ Prometheus scrapes metrics from the cluster and Grafana visualizes them in real 
 
 ### Network Usage (Last 5 Minutes)
 
-![Grafana Network](https://github.com/dvanhu/Wanderlust-Mega-DevSecOps-Project/raw/main/screenshots/grafana-network.png)
+![Grafana Network] 
 
 | Pod | Receive BW | Transmit BW | Received Packets |
 |---|---|---|---|
@@ -151,7 +152,7 @@ Prometheus scrapes metrics from the cluster and Grafana visualizes them in real 
 
 ### CPU Usage (Last 1 Hour)
 
-![Grafana CPU]
+![Grafana CPU] 
 
 CPU usage tracked across all pods over 1 hour with per-pod breakdowns for quota, requests, and limits — confirming all pods are running well within their resource boundaries.
 
