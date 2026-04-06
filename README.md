@@ -18,8 +18,7 @@ A production-grade DevSecOps implementation for **WanderLust**, a MERN-stack tra
 
 ## Pipeline Architecture
 
-![DevSecOps GitOps Architecture](![DevSecOps+GitOps](https://github.com/user-attachments/assets/371660a8-3aef-4425-99ae-7ae22482c5dd))
-
+![DevSecOps GitOps Architecture](https://github.com/user-attachments/assets/371660a8-3aef-4425-99ae-7ae22482c5dd)
 
 The pipeline is divided into two automated jobs:
 
@@ -169,5 +168,3 @@ Wanderlust-Mega-DevSecOps-Project/
 - Fully containerized workloads — all four services run as isolated pods on EKS with persistent storage for MongoDB
 - Production-grade observability — per-pod CPU, memory, and network bandwidth metrics with configurable alerting via Alertmanager
 - Clean separation of CI and CD — the CI pipeline owns build and security; the CD pipeline owns delivery and notification
-
----
