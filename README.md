@@ -100,6 +100,7 @@ SonarQube runs against the full codebase on every pipeline execution. The qualit
 | New Security Hotspots | 0 |
 | New Code Smells | 0 |
 | Reliability / Security / Maintainability | A / A / A |
+<img width="1852" height="930" alt="Screenshot from 2026-04-06 09-31-35" src="https://github.com/user-attachments/assets/ccbc4427-b126-4318-9c8b-78731198b989" />
 
 ---
 
