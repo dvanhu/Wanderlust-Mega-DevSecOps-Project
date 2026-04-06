@@ -12,12 +12,14 @@
 A production-grade DevSecOps implementation for **WanderLust**, a MERN-stack travel blog application. This project wraps a fully automated CI/CD pipeline around the application, enforcing security at every stage — from code commit to live Kubernetes deployment — with GitOps-driven delivery and real-time observability.
 
 > **Application credit:** The WanderLust MERN application was originally developed by [krishnaacharyaa](https://github.com/krishnaacharyaa/wanderlust). This repository is focused entirely on the DevSecOps engineering layer built on top of it.
+<img width="2010" height="1401" alt="277722443-17ba9da6-225f-481d-87c0-5d5a010a9538" src="https://github.com/user-attachments/assets/8f8b40e0-fef5-4ca4-8038-1aad2821f0e0" />
 
 ---
 
 ## Pipeline Architecture
 
-![DevSecOps GitOps Architecture](https://github.com/user-attachments/assets/371660a8-3aef-4425-99ae-7ae22482c5dd)
+![DevSecOps GitOps Architecture] ![DevSecOps+GitOps](https://github.com/user-attachments/assets/8db20892-a8ee-41eb-81bc-7647cf4bd9b6)
+
 
 The pipeline is divided into two automated jobs:
 
@@ -69,6 +71,19 @@ Built on a Jenkins master-worker node architecture. Every commit triggers a run 
 | Docker Push | Pushes verified images to DockerHub |
 | Post Actions | Archives build artifacts and sends email notification |
 
+<img width="1920" height="1080" alt="Screenshot from 2026-04-06 09-29-16" src="https://github.com/user-attachments/assets/c7a1eae8-b920-4545-92e5-07c880edb941" />
+
+---
+
+## Docker Hub — Published Images
+
+Both application images are publicly available on Docker Hub at **[hub.docker.com/u/dvanhu](https://hub.docker.com/u/dvanhu)** and are built and pushed automatically by the Jenkins CI pipeline on every successful run.
+
+| Repository | Image | Pull Command |
+|---|---|---|
+| Frontend | [`dvanhu/wanderlust-frontend`](https://hub.docker.com/r/dvanhu/wanderlust-frontend) | `docker pull dvanhu/wanderlust-frontend` |
+| Backend | [`dvanhu/wanderlust-backend`](https://hub.docker.com/r/dvanhu/wanderlust-backend) | `docker pull dvanhu/wanderlust-backend` |
+
 ---
 
 ## SonarQube — Quality Gate
@@ -101,6 +116,10 @@ ArgoCD watches the Kubernetes manifests repository and reconciles the live clust
 | Auto Sync | Enabled |
 | Synced Resources | 10 |
 | Healthy Resources | 17 |
+
+<img width="1920" height="1080" alt="Screenshot from 2026-04-06 11-05-03" src="https://github.com/user-attachments/assets/e56c45e1-5834-4657-a922-82c59e2c2bdc" />
+<img width="1920" height="1080" alt="Screenshot from 2026-04-06 11-05-11" src="https://github.com/user-attachments/assets/99371f94-df87-46dc-a7d5-e9f317e473f6" />
+
 
 **Deployed resources:**
 
