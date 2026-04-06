@@ -103,15 +103,26 @@ pipeline {
             }
         }
 
-        stage('Docker Push (Optional)') {
-            when {
-                expression { return false }
-            }
+        stage('Docker Push') {
             steps {
-                sh '''
-                docker push wanderlust-backend:${BACKEND_DOCKER_TAG}
-                docker push wanderlust-frontend:${FRONTEND_DOCKER_TAG}
-                '''
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-cred',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    echo "Logging into DockerHub..."
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+
+                    echo "Tagging images..."
+                    docker tag wanderlust-backend:${BACKEND_DOCKER_TAG} $DOCKER_USER/wanderlust-backend:${BACKEND_DOCKER_TAG}
+                    docker tag wanderlust-frontend:${FRONTEND_DOCKER_TAG} $DOCKER_USER/wanderlust-frontend:${FRONTEND_DOCKER_TAG}
+
+                    echo "Pushing images..."
+                    docker push $DOCKER_USER/wanderlust-backend:${BACKEND_DOCKER_TAG}
+                    docker push $DOCKER_USER/wanderlust-frontend:${FRONTEND_DOCKER_TAG}
+                    '''
+                }
             }
         }
     }
@@ -121,7 +132,7 @@ pipeline {
             archiveArtifacts artifacts: '*.xml', allowEmptyArchive: true
         }
         success {
-            echo "✅ Pipeline completed successfully 🚀"
+            echo "✅ FULL DEVSECOPS PIPELINE SUCCESS 🚀"
         }
         failure {
             echo "❌ Pipeline failed — check logs 🔍"
