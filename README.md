@@ -8,7 +8,6 @@
 [![Trivy](https://img.shields.io/badge/Scanner-Trivy-1904DA?style=flat-square&logo=aquasecurity&logoColor=white)](https://trivy.dev/)
 [![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white)](https://prometheus.io/)
 [![Grafana](https://img.shields.io/badge/Observability-Grafana-F46800?style=flat-square&logo=grafana&logoColor=white)](https://grafana.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
 A production-grade DevSecOps implementation for **WanderLust**, a MERN-stack travel blog application. This project wraps a fully automated CI/CD pipeline around the application, enforcing security at every stage — from code commit to live Kubernetes deployment — with GitOps-driven delivery and real-time observability.
 
