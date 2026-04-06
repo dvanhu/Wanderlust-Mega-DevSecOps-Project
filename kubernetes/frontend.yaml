@@ -12,15 +12,15 @@ spec:
       app: frontend
   template:
     metadata:
-      name: frontend
       labels:
         app: frontend
     spec:
       containers:
         - name: frontend
-          image: madhupdevops/wanderlust-frontend-beta:v3.0.18
+          image: dvanhu/wanderlust-frontend:latest
           ports:
             - containerPort: 5173
+
 ---
 apiVersion: v1
 kind: Service
@@ -34,5 +34,4 @@ spec:
   ports:
     - port: 5173
       targetPort: 5173
-      protocol: TCP
       nodePort: 31000
