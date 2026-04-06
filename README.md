@@ -144,6 +144,8 @@ Prometheus scrapes pod-level metrics from the cluster. Grafana surfaces them on 
 | frontend-deployment | 0 B/s | 0 B/s | 0 p/s |
 
 CPU usage is tracked per pod over a rolling 1-hour window with quota, request, and limit overlays — all pods run well within their declared resource boundaries.
+<img width="1333" height="667" alt="image" src="https://github.com/user-attachments/assets/5e23237e-2c41-413f-a340-415bdb442002" />
+<img width="1334" height="672" alt="image" src="https://github.com/user-attachments/assets/e855d281-3599-459e-a18a-a558a7b4b3d5" />
 
 ---
 
