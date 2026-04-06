@@ -30,12 +30,8 @@ pipeline {
             steps {
                 retry(2) {
                     sh '''
-                    echo "Installing dependencies..."
-
                     npm config set registry $NPM_CONFIG_REGISTRY
                     npm config set fetch-retries 5
-                    npm config set fetch-retry-mintimeout 20000
-                    npm config set fetch-retry-maxtimeout 120000
 
                     cd backend
                     npm install --no-audit --prefer-offline
@@ -50,8 +46,6 @@ pipeline {
         stage('OWASP Dependency Check') {
             steps {
                 sh '''
-                echo "Running OWASP Dependency Check..."
-
                 /opt/dependency-check/bin/dependency-check.sh \
                 --scan . \
                 --format XML \
@@ -66,9 +60,7 @@ pipeline {
 
         stage('Trivy Filesystem Scan') {
             steps {
-                sh '''
-                trivy fs . --format table
-                '''
+                sh 'trivy fs . --format table'
             }
         }
 
@@ -111,18 +103,36 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                    echo "Logging into DockerHub..."
                     echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
-                    echo "Tagging images..."
                     docker tag wanderlust-backend:${BACKEND_DOCKER_TAG} $DOCKER_USER/wanderlust-backend:${BACKEND_DOCKER_TAG}
                     docker tag wanderlust-frontend:${FRONTEND_DOCKER_TAG} $DOCKER_USER/wanderlust-frontend:${FRONTEND_DOCKER_TAG}
 
-                    echo "Pushing images..."
                     docker push $DOCKER_USER/wanderlust-backend:${BACKEND_DOCKER_TAG}
                     docker push $DOCKER_USER/wanderlust-frontend:${FRONTEND_DOCKER_TAG}
                     '''
                 }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                echo "Deploying to Kubernetes..."
+
+                export KUBECONFIG=/var/lib/jenkins/config
+
+                kubectl set image deployment/backend-deployment \
+                backend=dvanhu/wanderlust-backend:${BACKEND_DOCKER_TAG} \
+                -n wanderlust
+
+                kubectl set image deployment/frontend-deployment \
+                frontend=dvanhu/wanderlust-frontend:${FRONTEND_DOCKER_TAG} \
+                -n wanderlust
+
+                kubectl rollout status deployment/backend-deployment -n wanderlust
+                kubectl rollout status deployment/frontend-deployment -n wanderlust
+                '''
             }
         }
     }
@@ -132,10 +142,10 @@ pipeline {
             archiveArtifacts artifacts: '*.xml', allowEmptyArchive: true
         }
         success {
-            echo "✅ FULL DEVSECOPS PIPELINE SUCCESS 🚀"
+            echo "✅ FULL CI/CD SUCCESS 🚀"
         }
         failure {
-            echo "❌ Pipeline failed — check logs 🔍"
+            echo "❌ Pipeline failed"
         }
     }
 }
