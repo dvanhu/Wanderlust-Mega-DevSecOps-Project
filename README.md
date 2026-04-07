@@ -71,7 +71,7 @@ Built on a Jenkins master-worker node architecture. Every commit triggers a run 
 | Docker Push | Pushes verified images to DockerHub |
 | Post Actions | Archives build artifacts and sends email notification |
 
-<img width="1920" height="1080" alt="Screenshot from 2026-04-06 09-29-16" src="https://github.com/user-attachments/assets/c7a1eae8-b920-4545-92e5-07c880edb941" />
+<img width="1487" height="305" alt="image" src="https://github.com/user-attachments/assets/71d8673c-81ce-4a2c-8e5e-d150bcdf560a" />
 
 ---
 
