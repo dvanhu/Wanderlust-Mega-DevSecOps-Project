@@ -47,7 +47,7 @@ The pipeline is divided into two automated jobs:
 | CI/CD Orchestration | Jenkins (Master-Worker architecture) |
 | Code Quality | SonarQube |
 | Security Scanning | OWASP Dependency Check, Trivy |
-| Container Orchestration | Kubernetes — AWS EKS |
+| Container Orchestration | Kubernetes |
 | GitOps | ArgoCD |
 | Monitoring | Prometheus, Grafana |
 | Alerting | Alertmanager, Gmail SMTP |
